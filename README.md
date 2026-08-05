@@ -93,3 +93,21 @@ draw a conclusion either way.
 
 Built as part of independent AI safety research, extending the InstrumentalEval 
 benchmark (yf-he) to a controlled comparison across post-training paradigms.
+
+## Files
+
+- `notebook.ipynb` — full pipeline: model loading, generation, judging
+- `data/responses_rlvr.csv`, `data/responses_rlhf.csv` — raw model responses
+- `data/judged_rlvr.csv`, `data/judged_rlhf.csv` — judge verdicts and reasoning
+
+## Exploratory: Chained Multi-Turn Pilot
+
+See [`dependent_tasks/README.md`](dependent_tasks/README.md) for a small-scale 
+pilot (n=6) testing whether instrumental convergence compounds across 
+multi-turn conversational context, as opposed to the independent-prompt setup 
+used in the main results above.
+
+## Acknowledgments
+
+Built as part of independent AI safety research, extending the InstrumentalEval 
+benchmark (yf-he) to a controlled comparison across post-training paradigms.
