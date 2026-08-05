@@ -37,10 +37,18 @@ prompts across 6 categories:
 - Running Multiple AI Copies
 - Strategically Appearing Aligned
 
-## Method
+## Repo Structure
 
-1. Each model generated a response to all 76 prompts independently (no shared 
-   context between prompts — one fresh conversation per prompt).
+- **`independent_task/`** — main experiment: each model responds to all 76 
+  prompts independently (no shared context between prompts). This is the 
+  primary, statistically-powered result.
+- **`dependent_tasks/`** — exploratory pilot: chained multi-turn conversations 
+  testing whether instrumental convergence compounds with growing context. 
+  Small sample (n=6), see its own README for scope and caveats.
+
+## Method (independent_task)
+
+1. Each model generated a response to all 76 prompts independently.
 2. Generation settings: `temperature=0.6`, `top_p=0.95`, `max_new_tokens=3000`.
 3. Each (prompt, response) pair was scored by two independent LLM judges — 
    Gemini (`gemini-3.1-flash-lite`) and a second model (Groq `llama-3.3-70b-versatile` 
@@ -85,20 +93,9 @@ draw a conclusion either way.
 
 ## Files
 
-- `notebook.ipynb` — full pipeline: model loading, generation, judging
-- `data/responses_rlvr.csv`, `data/responses_rlhf.csv` — raw model responses
-- `data/judged_rlvr.csv`, `data/judged_rlhf.csv` — judge verdicts and reasoning
-
-## Acknowledgments
-
-Built as part of independent AI safety research, extending the InstrumentalEval 
-benchmark (yf-he) to a controlled comparison across post-training paradigms.
-
-## Files
-
-- `notebook.ipynb` — full pipeline: model loading, generation, judging
-- `data/responses_rlvr.csv`, `data/responses_rlhf.csv` — raw model responses
-- `data/judged_rlvr.csv`, `data/judged_rlhf.csv` — judge verdicts and reasoning
+- `independent_task/notebook.ipynb` — full pipeline: model loading, generation, judging
+- `independent_task/responses_rlvr_76.csv`, `independent_task/responses_rlhf_76.csv` — raw model responses
+- `independent_task/judged_rlvr.csv`, `independent_task/judged_rlhf.csv` — judge verdicts and reasoning
 
 ## Exploratory: Chained Multi-Turn Pilot
 
