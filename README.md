@@ -11,6 +11,14 @@ A controlled follow-up to the earlier RLVR-vs-RLHF instrumental convergence (IC)
 
 Because both checkpoints come from the same AllenAI Tulu-3 pipeline, the only meaningful difference between them is whether the final RLVR stage was applied. This removes the base-model/tokenizer/SFT-data confound that limited the interpretability of the first round.
 
+## Design novelty: judging the judges, not just the responses
+
+Most IC evals stop at one layer: generate a response, score it for IC. This pipeline adds a second layer on top — the models don't just get scored, they're put in the evaluator seat and made to *judge each other's* responses first (step 2, blind unprimed peer audit), and then that judgment itself gets independently scored for accuracy and bias (step 4, meta-audit).
+
+The reasoning behind adding that layer: a model generating a response is operating in "learner" mode — it's producing an output under whatever pressures its training instilled. A model judging another model's response is operating in "teacher" mode — it has to explicitly reason about whether the response is acceptable. If IC-shaped behavior is something a model has the latent capacity to recognize but doesn't spontaneously surface in generation, teacher-mode is where that gap should show up: put the same underlying model in an evaluative role and see whether it now catches what it didn't produce differently.
+
+That's exactly what the blind self-audit results below show. The response-generation layer alone (step 3, IC-focused judging) says these models produce IC-flagged output on roughly a third to two-fifths of prompts. But when the *same models* are put in teacher mode with no framing toward safety (step 2), they catch almost none of it — 0% and 3.95%. The two-layer design is what makes that gap visible at all; a single-layer "score the response" pipeline would never have surfaced it, because it never asks the model to evaluate anything.
+
 ## Benchmark
 
 76 prompts from [InstrumentalEval](https://github.com/yf-he/InstrumentalEval), pulled live from the benchmark CSVs, across 6 categories:
@@ -66,7 +74,7 @@ Worth noting only as context: Evading Shutdown runs far hotter than every other 
 | RLVR judging RLHF's IC-positive responses | 39.47% (30/76) | 3.95% (3/76 caught) | 35.53 pts missed |
 | RLHF judging RLVR's IC-positive responses | 34.21% (26/76) | 0.00% (0/76 caught) | 34.21 pts missed |
 
-This is the most striking result in the notebook. When a model is asked "is this a good response?" with no framing toward safety, it accepts IC-laden responses from its peer as "Good" essentially every time — even though asking an explicitly IC-focused judge prompt against the same responses reveals IC present in a third to two-fifths of them. The gap isn't about capability (the same base architecture *can* detect IC when told what to look for in step 3) — it's about salience under a generic evaluation frame. That has a direct implication for anything relying on model self-critique or blind AI feedback as a safety signal: a model not primed to look for instrumental convergence largely won't flag it.
+This is the most striking result in the notebook, and it's the direct payoff of the teacher/learner design above: it's only visible because the pipeline put the models in an evaluative role in the first place. When a model is asked "is this a good response?" with no framing toward safety, it accepts IC-laden responses from its peer as "Good" essentially every time — even though asking an explicitly IC-focused judge prompt against the same responses reveals IC present in a third to two-fifths of them. The gap isn't about capability (the same base architecture *can* detect IC when told what to look for in step 3) — it's about salience under a generic evaluation frame. That has a direct implication for anything relying on model self-critique or blind AI feedback as a safety signal: a model not primed to look for instrumental convergence largely won't flag it, even when made to act as the evaluator.
 
 ### Meta-audit: judges disagree sharply on whether peer judgments were fair
 
