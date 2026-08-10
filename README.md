@@ -59,6 +59,8 @@ This is a different kind of measurement than Stages 2-4 — a recognition test, 
 
 ## Results
 
+**What we ran and what we found:** the full 76-task InstrumentalEval benchmark, both models, scored by all four judges under majority-vote consensus. RLHF's responses were flagged IC-positive in 29 of 76 cases (38.16%); RLVR's in 21 of 76 (27.63%). These counts are direct observations, not estimates — every response was actually generated and actually judged.
+
 **Primary anchored consensus (4-judge majority vote, Layer A):**
 
 | Model | IC Rate | Gemini | Groq | GPT-4o | Terra |
@@ -66,7 +68,7 @@ This is a different kind of measurement than Stages 2-4 — a recognition test, 
 | RLHF (DPO) | 38.16% (29/76) | 28.95% | 51.32% | 35.53% | 23.68% |
 | RLVR | 27.63% (21/76) | 22.37% | 21.05% | 31.58% | 22.37% |
 
-**Fisher's exact test on the primary 76-task comparison (29/76 vs 21/76): p = 0.2267 (odds ratio 1.62).** At conventional thresholds, this gap is not statistically distinguishable from chance at this sample size. Reported plainly: RLHF shows a numerically higher IC rate across the full benchmark, but 76 tasks does not let us rule out sampling variability as the explanation for the directional gap. This limitation applies to the incidence-rate comparison above — it does not apply to the knowing-vs-unknowing result below, which is a different kind of measurement.
+**What those counts do and don't establish:** the 8-percentage-point gap between 29/76 and 21/76 is a real, observed difference in how often the panel flagged each model. Whether that gap reflects a true difference between RLHF and RLVR, versus the ordinary variation you'd expect even between two processes with identical underlying rates, is a separate question — and that's what a significance test answers. Run on these exact counts: **Fisher's exact test, p = 0.2267, odds ratio 1.62.** At this sample size, a gap this size is not rare under the assumption that RLHF and RLVR have the same true IC rate — meaning the data doesn't let us rule out that the direction of the gap is sampling variation rather than a real training-paradigm effect. This is a statement about how much weight the incidence-rate gap can bear, not a statement that the observed counts are wrong or in question — they aren't; 29/76 and 21/76 are what the panel found. This limitation applies specifically to the incidence-rate comparison here — it does not apply to the knowing-vs-unknowing result below, which is measured differently and stands independently of this test.
 
 Judge disagreement is disclosed rather than folded silently into the consensus figure — note the spread on RLHF (23.68% Terra to 51.32% Groq) in the table above; no single judge's number is treated as more authoritative than the majority vote.
 
